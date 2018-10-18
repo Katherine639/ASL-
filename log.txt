@@ -1,0 +1,20 @@
+--------- beginning of main
+10-16 21:24:46.547  2337 21613 I EventLogChimeraService: Aggregate from 1539748606394 (log), 1539748606394 (data)
+10-16 21:25:10.821  1413  1433 W audio_hw_generic: Not supplying enough data to HAL, expected position 20634530 , only wrote 20634480
+--------- beginning of system
+10-16 21:25:13.987  1649  2664 I ActivityManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.example.android.sunshine/.MainActivity (has extras)} from uid 10019 on display 0
+10-16 21:25:14.013  2480  2546 D EGL_emulation: eglMakeCurrent: 0xaf473700: ver 2 0 (tinfo 0x96ea00f0)
+10-16 21:25:14.031  1413  1434 W audio_hw_generic: Not supplying enough data to HAL, expected position 20940547 , only wrote 20788560
+10-16 21:25:14.036  1413  1433 W audio_hw_generic: Not supplying enough data to HAL, expected position 20788714 , only wrote 20788560
+10-16 21:25:14.066 20927 20942 D EGL_emulation: eglMakeCurrent: 0xb3085120: ver 2 0 (tinfo 0xb3083220)
+10-16 21:25:14.394  1649  2476 I WindowManager: Destroying surface Surface(name=com.android.launcher3/com.android.launcher3.Launcher) called by com.android.server.wm.WindowStateAnimator.destroySurface:2016 com.android.server.wm.WindowStateAnimator.destroySurfaceLocked:882 com.android.server.wm.WindowState.destroyOrSaveSurface:2100 com.android.server.wm.AppWindowToken.destroySurfaces:363 com.android.server.wm.AppWindowToken.notifyAppStopped:389 com.android.server.wm.WindowManagerService.notifyAppStopped:4463 com.android.server.am.ActivityStack.activityStoppedLocked:1252 com.android.server.am.ActivityManagerService.activityStopped:6903 
+10-16 21:25:17.246  1413  1434 W audio_hw_generic: Not supplying enough data to HAL, expected position 21094724 , only wrote 20942640
+10-16 21:25:19.794  1784  1987 D EGL_emulation: eglMakeCurrent: 0xa3bfb480: ver 2 0 (tinfo 0xa3bcfb00)
+10-16 21:25:19.986  1649  1685 I ActivityManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10200000 cmp=com.android.launcher3/.Launcher (has extras)} from uid 1000 on display 0
+10-16 21:25:19.988  1413  1433 W audio_hw_generic: Not supplying enough data to HAL, expected position 20942789 , only wrote 20942640
+10-16 21:25:19.996  1347  1384 D gralloc_ranchu: gralloc_alloc: Creating ashmem region of size 2691072
+10-16 21:25:20.004  1347  1347 E EGL_emulation: tid 1347: eglCreateSyncKHR(1901): error 0x3004 (EGL_BAD_ATTRIBUTE)
+10-16 21:25:20.018 20927 20942 D EGL_emulation: eglMakeCurrent: 0xb3085120: ver 2 0 (tinfo 0xb3083220)
+10-16 21:25:20.066  2480  2546 D EGL_emulation: eglMakeCurrent: 0xaf473700: ver 2 0 (tinfo 0x96ea00f0)
+10-16 21:25:20.576  2480  2546 W OpenGLRenderer: Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+10-16 21:25:23.228  1413  1434 W audio_hw_generic: Not supplying enough data to HAL, expected position 21251558 , only wrote 21098160
