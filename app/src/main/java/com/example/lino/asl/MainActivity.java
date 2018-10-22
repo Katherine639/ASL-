@@ -12,6 +12,12 @@ package com.example.lino.asl;
         import java.util.ArrayList;
         import java.util.Locale;
 
+        // Libraries for web scraper
+        import java.io.IOException;
+        import org.jsoup.Jsoup;
+        import org.jsoup.nodes.Document;
+        import org.jsoup.nodes.Element;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
@@ -59,6 +65,31 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
 
+        }
+    }
+
+    // Function that grabs data from ASL web dictionary
+    public void WebScraper(String word) {
+        try {
+
+            // fetch the document over HTTP
+            Document doc = Jsoup.connect("https://www.signasl.org/sign/" + word).get();
+
+            // Find first video
+            Element div = doc.select("meta[itemprop=contentURL]").first();
+            String content = div.attr("content");
+
+            // Check if content is a link or YouTube code
+            String substring = content.substring(0, 4);
+            if (!"http".equals(substring)) {
+                content = "https://www.youtube.com/watch?v=" + content;
+            }
+
+            // Print link for now
+            System.out.println(content);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
