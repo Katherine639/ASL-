@@ -2,17 +2,22 @@ package com.example.lino.asl;
 
 
         import android.content.ActivityNotFoundException;
+        import android.content.Context;
         import android.content.Intent;
         import android.graphics.drawable.AnimationDrawable;
         import android.graphics.drawable.Drawable;
         import android.os.Bundle;
         import android.speech.RecognizerIntent;
         import android.support.v7.app.AppCompatActivity;
+        import android.view.Gravity;
         import android.view.View;
+        import android.widget.Button;
         import android.widget.ImageButton;
         import android.widget.ImageView;
         import android.util.Log;
         import android.widget.TextView;
+        import android.widget.Toast;
+
         import java.util.ArrayList;
         import java.util.Locale;
 
@@ -27,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private TextView mVoiceInputTv;
     private ImageButton mSpeakBtn;
+    private Button Translate;
+    private ArrayList<String> result;
     AnimationDrawable wordAnimation;
 
     @Override
@@ -44,7 +51,32 @@ public class MainActivity extends AppCompatActivity {
                 startVoiceInput();
             }
         });
+        Translate = (Button) findViewById(R.id.button);
+
+        // Add a OnClickListener object to button3.
+        Translate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Context  context = null;
+//                result.set(0,mVoiceInputTv.getText().toString());
+//                if(result.get(0) == ""){
+//                    Toast toast = Toast.makeText(context, "Enter a word!", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER, 0, 0);
+//                    toast.show();
+//                }else{
+//                    Toast toast = Toast.makeText(context, "Translating word!", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER, 0, 0);
+//                    toast.show();
+//
+//                }
+
+               // PlayWord(result.get(0));
+
+
+            }
+        });
     }
+
 
     private void startVoiceInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -65,11 +97,10 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
                     mVoiceInputTv.setText(result.get(0));
-                    result.set(0,mVoiceInputTv.getText().toString());
-                    PlayWord(result.get(0));
+
 
                 }
                 break;
