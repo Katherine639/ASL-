@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -65,7 +66,11 @@ public class MainActivity extends AppCompatActivity {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
                     mVoiceInputTv.setText(result.get(0));
+                    result.set(0,mVoiceInputTv.getText().toString());
+                    PlayWord(result.get(0));
+
                 }
                 break;
             }
@@ -97,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public String Prepare_text(String Input ){
+            String parse = "";
+            return(parse);
+    }
+
+    //Input text display
 
     public void PlayWord(String word){
         wordAnimation = new AnimationDrawable();
