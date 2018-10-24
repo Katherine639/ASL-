@@ -114,22 +114,39 @@ public class MainActivity extends AppCompatActivity {
     // Function that grabs data from ASL web dictionary
     public void WebScraper(String word) {
         try {
-
             // fetch the document over HTTP
             Document doc = Jsoup.connect("https://www.signasl.org/sign/" + word).get();
 
-            // Find first video
-            Element div = doc.select("meta[itemprop=contentURL]").first();
-            String content = div.attr("content");
+            // Find all videos
+            Elements eles = doc.select("meta[itemprop=contentURL]");
 
-            // Check if content is a link or YouTube code
-            String substring = content.substring(0, 4);
-            if (!"http".equals(substring)) {
-                content = "https://www.youtube.com/watch?v=" + content;
+            /* Throw Exception if word not found */
+            if (eles.isEmpty()) {
+                throw new NoSuchElementException("Word was not found.");
             }
 
-            // Print link for now
-            System.out.println(content);
+            // list that will store all URLs
+            List<String> url_links = new ArrayList<>();
+
+            /* Add all URLs to a list */
+            String temp_url = "";
+            for (Element ele : eles) {
+                temp_url = ele.attr("content");
+
+                /* Check if content is a link to video or a YouTube id
+                 * Delete this if statement if we don't need to convert to a YouTube link*/
+                String substring = temp_url.substring(0, 4);
+                if (!"http".equals(substring)) {
+                    temp_url = "https://www.youtube.com/watch?v=" + temp_url;
+                }
+
+                url_links.add(temp_url);
+            }
+
+            /* Test list */
+            for (String link : url_links) {
+                System.out.println(link);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
