@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 // Libraries for web scraper
+import java.util.*;
 import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class MainActivity extends AppCompatActivity {
 
