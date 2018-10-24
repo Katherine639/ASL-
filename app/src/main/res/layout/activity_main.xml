@@ -20,6 +20,10 @@
         app:srcCompat="@mipmap/ic_launcher_foreground"
         tools:srcCompat="@mipmap/ic_launcher_foreground" />
 
+    <ImageView
+        android:id="@+id/animationview"
+        android:layout_width="140dp"
+        android:layout_height="207dp" />
     <EditText
         android:id="@+id/voiceInput"
         android:layout_width="432dp"

@@ -3,11 +3,15 @@ package com.example.lino.asl;
 
         import android.content.ActivityNotFoundException;
         import android.content.Intent;
+        import android.graphics.drawable.AnimationDrawable;
+        import android.graphics.drawable.Drawable;
         import android.os.Bundle;
         import android.speech.RecognizerIntent;
         import android.support.v7.app.AppCompatActivity;
         import android.view.View;
         import android.widget.ImageButton;
+        import android.widget.ImageView;
+        import android.util.Log;
         import android.widget.TextView;
         import java.util.ArrayList;
         import java.util.Locale;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private TextView mVoiceInputTv;
     private ImageButton mSpeakBtn;
+    AnimationDrawable wordAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,5 +96,19 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void PlayWord(String word){
+        wordAnimation = new AnimationDrawable();
+        for(int i = 0; i < word.length(); i++){
+            String letter = String.valueOf(word.charAt(i));
+            int drawId = getResources().getIdentifier(letter,"drawable", this.getPackageName());
+            Drawable d = getResources().getDrawable(drawId);
+            wordAnimation.addFrame(d, 1500);
+        }
+        ImageView letterAnim = (ImageView)findViewById(R.id.animationview);
+        letterAnim.setBackgroundDrawable(wordAnimation);
+        wordAnimation.setOneShot(true);
+        wordAnimation.start();
     }
 }
