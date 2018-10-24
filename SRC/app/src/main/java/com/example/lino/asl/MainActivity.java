@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton mSpeakBtn;
     private Button Translate;
     private ArrayList<String> result;
+    private Context  context = null;
+
     AnimationDrawable wordAnimation;
 
     @Override
@@ -59,20 +61,18 @@ public class MainActivity extends AppCompatActivity {
         Translate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Context  context = null;
-//                result.set(0,mVoiceInputTv.getText().toString());
-//                if(result.get(0) == ""){
-//                    Toast toast = Toast.makeText(context, "Enter a word!", Toast.LENGTH_SHORT);
-//                    toast.setGravity(Gravity.CENTER, 0, 0);
-//                    toast.show();
-//                }else{
-//                    Toast toast = Toast.makeText(context, "Translating word!", Toast.LENGTH_SHORT);
-//                    toast.setGravity(Gravity.CENTER, 0, 0);
-//                    toast.show();
-//
-//                }
 
-                // PlayWord(result.get(0));
+
+                String input_text = mVoiceInputTv.getText().toString();
+
+                if(input_text == ""){
+                    Toast.makeText(getApplicationContext(),"Please enter word!",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Translating word!",Toast.LENGTH_SHORT).show();
+                    PlayWord(input_text);
+                }
+
+
 
 
             }
