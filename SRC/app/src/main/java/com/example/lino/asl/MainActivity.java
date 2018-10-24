@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton mSpeakBtn;
     private Button Translate;
     private ArrayList<String> result;
-    private Context  context = null;
+
 
     AnimationDrawable wordAnimation;
 
@@ -161,16 +161,33 @@ public class MainActivity extends AppCompatActivity {
     //Input text display
 
     public void PlayWord(String word){
+
+        boolean exist = false;
         wordAnimation = new AnimationDrawable();
         for(int i = 0; i < word.length(); i++){
             String letter = String.valueOf(word.charAt(i));
             int drawId = getResources().getIdentifier(letter,"drawable", this.getPackageName());
-            Drawable d = getResources().getDrawable(drawId);
-            wordAnimation.addFrame(d, 1500);
+
+            Log.d("Debug: ", Integer.toString(drawId));
+            if (drawId == 0){
+                exist = false;
+                continue;
+            }else{
+                Drawable d = getResources().getDrawable(drawId);
+                wordAnimation.addFrame(d, 1500);
+                exist = true;
+            }
+
         }
-        ImageView letterAnim = (ImageView)findViewById(R.id.animationview);
-        letterAnim.setBackgroundDrawable(wordAnimation);
-        wordAnimation.setOneShot(true);
-        wordAnimation.start();
+        if(exist){
+            ImageView letterAnim = (ImageView)findViewById(R.id.animationview);
+            letterAnim.setBackgroundDrawable(wordAnimation);
+            wordAnimation.setOneShot(true);
+            wordAnimation.start();
+        }else{
+            Toast.makeText(getApplicationContext(),"Not found!",Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
