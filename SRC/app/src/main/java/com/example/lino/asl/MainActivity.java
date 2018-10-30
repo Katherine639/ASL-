@@ -18,6 +18,11 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -29,7 +34,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends YouTubeBaseActivity {
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private TextView mVoiceInputTv;
@@ -39,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     AnimationDrawable wordAnimation;
+
+    //Youtube
+    YouTubePlayerView youTubePlayerView;
+
+
+    YouTubePlayer.OnInitializedListener onInitializedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +68,29 @@ public class MainActivity extends AppCompatActivity {
         });
         Translate = (Button) findViewById(R.id.button);
 
-        // Add a OnClickListener object to button3.
+        youTubePlayerView = (YouTubePlayerView)findViewById(R.id.youtube_player_View);
+        onInitializedListener = new YouTubePlayer.OnInitializedListener(){
+
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    player.cueVideo("SwBiXoQLl6s"); // Plays https://www.youtube.com/watch?v=SwBiXoQLl6s
+                }
+            }
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
+//                if (errorReason.isUserRecoverableError()) {
+//                    errorReason.getErrorDialog(this, RECOVERY_REQUEST).show();
+//                } else {
+//                    String error = String.format(getString(R.string.player_error), errorReason.toString());
+//                    Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+//                }
+
+            }
+
+        };
+
+        // Add a OnClickListener object to botton translate .
         Translate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(getApplicationContext(),"Translating word!",Toast.LENGTH_SHORT).show();
                     PlayWord(input_text);
+                    youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
+
                 }
 
 
