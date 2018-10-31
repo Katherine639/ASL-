@@ -162,13 +162,44 @@ public class MainActivity extends AppCompatActivity {
 
     public void PlayWord(String word){
 
+        // variable to check if the image exits
         boolean exist = false;
+
+        // create a new animation
         wordAnimation = new AnimationDrawable();
+
+        // for loop to search each letter in the word and add it to the animation
         for(int i = 0; i < word.length(); i++){
+
+            // gets the ith letter of the word
             String letter = String.valueOf(word.charAt(i));
+
+            // check for numbers and replace the string
+            if(letter.equals("0"))
+                letter = letter.replace("0","zero");
+            if(letter.equals("1"))
+                letter = letter.replace("1","one");
+            if(letter.equals("2"))
+                letter = letter.replace("2","two");
+            if(letter.equals("3"))
+                letter = letter.replace("3","three");
+            if(letter.equals("4"))
+                letter = letter.replace("4","four");
+            if(letter.equals("5"))
+                letter = letter.replace("5","five");
+            if(letter.equals("6"))
+                letter = letter.replace("6","six");
+            if(letter.equals("7"))
+                letter = letter.replace("7","seven");
+            if(letter.equals("8"))
+                letter = letter.replace("8","eight");
+            if(letter.equals("9"))
+                letter = letter.replace("9","nine");
+
+            // the the resource id of the image
             int drawId = getResources().getIdentifier(letter,"drawable", this.getPackageName());
 
-            Log.d("Debug: ", Integer.toString(drawId));
+            // if it doesn't exist the go on to the next one and if it does then add the image to the animation
             if (drawId == 0){
                 exist = false;
                 continue;
@@ -179,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
+        // if the words exist then play the animation
         if(exist){
             ImageView letterAnim = (ImageView)findViewById(R.id.animationview);
             letterAnim.setBackgroundDrawable(wordAnimation);
@@ -187,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(getApplicationContext(),"Not found!",Toast.LENGTH_SHORT).show();
         }
-
 
     }
 }
