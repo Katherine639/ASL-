@@ -99,7 +99,7 @@ public class MainActivity extends YouTubeBaseActivity {
                 String input_text = mVoiceInputTv.getText().toString();
 
                 if(input_text == ""){
-                    Toast.makeText(getApplicationContext(),"Please enter word!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Please enter a word!",Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(),"Translating word!",Toast.LENGTH_SHORT).show();
                     PlayWord(input_text);
