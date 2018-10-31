@@ -1,4 +1,0 @@
-#Sun Oct 21 20:50:13 PDT 2018
-base.0=/Users/jessicag/AndroidStudioProjects/ASL-/app/build/intermediates/transforms/dexMerger/debug/10
-path.0=classes.dex
-renamed.0=classes.dex
