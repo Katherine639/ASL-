@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
@@ -40,25 +41,57 @@ public class MainActivity extends YouTubeBaseActivity {
     private TextView mVoiceInputTv;
     private ImageButton mSpeakBtn;
     private Button Translate;
-    private ArrayList<String> result;
+    private ArrayList<String> result;       //result from voice input
 
+    /**Store videos links here ***/
+    private List<String> url_results = new ArrayList<String>();
 
+    private YouTubePlayer Player;
+    private boolean PlayerIsInitialied;
     AnimationDrawable wordAnimation;
 
     //Youtube
     YouTubePlayerView youTubePlayerView;
-
-
     YouTubePlayer.OnInitializedListener onInitializedListener;
+    YouTubePlayer.PlaylistEventListener playlistEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PlayerIsInitialied = false;
 
+        /*************  match with xml variables ***************/
         mVoiceInputTv = (TextView) findViewById(R.id.voiceInput);
         mSpeakBtn = (ImageButton) findViewById(R.id.btnSpeak);
+        youTubePlayerView = (YouTubePlayerView)findViewById(R.id.youtube_player_View);
+        Translate = (Button) findViewById(R.id.button);
+        /*************************************************************
+         * Youtube player on initialize
+         * Creates playlist of videos
+         ********************************************************/
+        onInitializedListener = new YouTubePlayer.OnInitializedListener(){
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    PlayerIsInitialied = true;
+                    Player = player;
+                    player.cueVideos(url_results);
+                    url_results.clear();
+
+                }
+            }
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
+
+            }
+
+        };
+        /*************************************************************
+         * Button method for speak botton
+         * Add a OnClickListener object to botton .
+         ********************************************************/
         mSpeakBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -66,53 +99,45 @@ public class MainActivity extends YouTubeBaseActivity {
                 startVoiceInput();
             }
         });
-        Translate = (Button) findViewById(R.id.button);
 
-        youTubePlayerView = (YouTubePlayerView)findViewById(R.id.youtube_player_View);
-        onInitializedListener = new YouTubePlayer.OnInitializedListener(){
 
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-                if (!wasRestored) {
-                    player.cueVideo("SwBiXoQLl6s"); // Plays https://www.youtube.com/watch?v=SwBiXoQLl6s
-                }
-            }
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
-//                if (errorReason.isUserRecoverableError()) {
-//                    errorReason.getErrorDialog(this, RECOVERY_REQUEST).show();
-//                } else {
-//                    String error = String.format(getString(R.string.player_error), errorReason.toString());
-//                    Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-//                }
-
-            }
-
-        };
-
-        // Add a OnClickListener object to botton translate .
+        /*************************************************************
+         * Button method Translate
+         * Add a OnClickListener object to botton translate .
+         ********************************************************/
         Translate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
+                //Retrive text from input text
                 String input_text = mVoiceInputTv.getText().toString();
 
-                if(input_text == ""){
+
+                if(input_text.length() == 0 ){
+                    //Default is hello world !
+                    url_results.add("rhfJGeMDMzQ");      // link to hello
+                    url_results.add("SwBiXoQLl6s");     // link to world
+                    youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
+
                     Toast.makeText(getApplicationContext(),"Please enter a word!",Toast.LENGTH_SHORT).show();
                 }else{
+
+
+                    System.out.println("!!!!!!!!!!!!!!!" +  input_text + "!!!!!!!!!!!!!!!");
                     Toast.makeText(getApplicationContext(),"Translating word!",Toast.LENGTH_SHORT).show();
-                    PlayWord(input_text);
-                    youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
+
+                    String[] input_words = Prepare_text(input_text);
+                    //PlayWord(input_text)
+                    new WebScaper().execute(input_words);
+
 
                 }
 
-
-
-
             }
         });
+
     }
+
 
 
     private void startVoiceInput() {
@@ -147,50 +172,83 @@ public class MainActivity extends YouTubeBaseActivity {
     }
 
     // Function that grabs data from ASL web dictionary
-    public void WebScraper(String word) {
-        try {
-            // fetch the document over HTTP
-            Document doc = Jsoup.connect("https://www.signasl.org/sign/" + word).get();
-
-            // Find all videos
-            Elements eles = doc.select("meta[itemprop=contentURL]");
-
-            /* Throw Exception if word not found */
-            if (eles.isEmpty()) {
-                throw new NoSuchElementException("Word was not found.");
-            }
-
+    class WebScaper extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... words) {
             // list that will store all URLs
-            List<String> url_links = new ArrayList<>();
 
-            /* Add all URLs to a list */
-            String temp_url = "";
-            for (Element ele : eles) {
-                temp_url = ele.attr("content");
 
-                /* Check if content is a link to video or a YouTube id
-                 * Delete this if statement if we don't need to convert to a YouTube link*/
-                String substring = temp_url.substring(0, 4);
-                if (!"http".equals(substring)) {
-                    temp_url = "https://www.youtube.com/watch?v=" + temp_url;
+            System.out.println("!!!!!!!!!!!!!!!In side WebScraper!!!!!!!!!!!!!!!");
+            for(String word : words){
+                try {
+                    System.out.println("!!!!!!!!!!!!!!" + word + "!!!!!!!!!!!!!!!");
+                    String URL = "https://www.signasl.org/sign/" + word;
+                    // fetch the document over HTTP
+                    Document doc = Jsoup.connect(URL).get();
+
+                    System.out.println("!!!!!!!!!!!!!!!In side TRY!!!!!!!!!!!!!!!");
+
+                    // Find all videos
+                    Elements eles = doc.select("meta[itemprop=contentURL]");
+
+                    /* Throw Exception if word not found */
+                    if (eles.isEmpty()) {
+
+                        throw new NoSuchElementException("Word was not found.");
+
+                    }
+                    List<String> url_links = new ArrayList<>();
+
+                    /* Add all URLs to a list */
+                    String temp_url = "";
+                    for (Element ele : eles) {
+                        temp_url = ele.attr("content");
+
+                        /* Check if content is a link to video or a YouTube id
+                         * Delete this if statement if we don't need to convert to a YouTube link*/
+                        String substring = temp_url.substring(0, 4);
+                        if (!"http".equals(substring)) {
+                            url_links.add(temp_url);
+
+                        }
+
+                    }
+
+                    /* Test list */
+                    for (String link : url_links) {
+                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!link:  " + link);
+                    }
+                    url_results.add(url_links.get(0));
+
+                } catch (Throwable t) {
+                    System.out.println("!!!!!!!!!!!!!!!CATCH!!!!!!!!!!!!!!!");
+
+                    t.printStackTrace();
+                    return "fail to get urls: inside catch !";
+
                 }
 
-                url_links.add(temp_url);
+            }
+            return "Success";
+        }
+
+        protected void onPostExecute(String result) {
+
+            // process results
+            System.out.println("!!!!!!!!!!!!!!"+result+"!!!!!!!!!!!!!!!");
+            if(PlayerIsInitialied == false){
+                youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
+            }else{
+                Player.cueVideos(url_results);
+                url_results.clear();
             }
 
-            /* Test list */
-            for (String link : url_links) {
-                System.out.println(link);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public String Prepare_text(String Input ){
-        String parse = "";
-        return(parse);
+
+    public String[] Prepare_text(String Input ){
+        String parse = Input.toLowerCase();
+        return(parse.split("\\s+"));
     }
 
     //Input text display
