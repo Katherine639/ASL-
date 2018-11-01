@@ -231,8 +231,8 @@ public class MainActivity extends YouTubeBaseActivity {
             return "Success";
         }
 
+        /**********************Execute playlist after returned urls ***********/
         protected void onPostExecute(String result) {
-
             // process results
             System.out.println("!!!!!!!!!!!!!!"+result+"!!!!!!!!!!!!!!!");
             if(PlayerIsInitialied == false){
@@ -252,7 +252,6 @@ public class MainActivity extends YouTubeBaseActivity {
     }
 
     //Input text display
-
     public void PlayWord(String word){
 
         // variable to check if the image exits
