@@ -47,7 +47,7 @@ public class MainActivity extends YouTubeBaseActivity {
     private List<String> url_results = new ArrayList<String>();
 
     private YouTubePlayer Player;
-    private boolean PlayerIsInitialied;
+    private boolean PlayerIsInitialied = false;
     AnimationDrawable wordAnimation;
 
     //Youtube
@@ -60,7 +60,7 @@ public class MainActivity extends YouTubeBaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PlayerIsInitialied = false;
+
 
         /*************  match with xml variables ***************/
         mVoiceInputTv = (TextView) findViewById(R.id.voiceInput);
@@ -77,7 +77,8 @@ public class MainActivity extends YouTubeBaseActivity {
                 if (!wasRestored) {
                     PlayerIsInitialied = true;
                     Player = player;
-                    player.cueVideos(url_results);
+                    Player.setShowFullscreenButton(false);
+                    Player.loadVideos(url_results,0,0);
                     url_results.clear();
 
                 }
@@ -107,7 +108,19 @@ public class MainActivity extends YouTubeBaseActivity {
          ********************************************************/
         Translate.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View view) {
+
+
+                /*************Importante***********
+                 * Release the player so that you can
+                 * make custome playlist every time that translate
+                 * Button is pressed
+                 *********************************/
+                if(PlayerIsInitialied == true){
+                    Player.release();
+                    PlayerIsInitialied =false;
+                }
 
                 //Retrive text from input text
                 String input_text = mVoiceInputTv.getText().toString();
@@ -115,19 +128,17 @@ public class MainActivity extends YouTubeBaseActivity {
 
                 if(input_text.length() == 0 ){
                     //Default is hello world !
-                    url_results.add("rhfJGeMDMzQ");      // link to hello
-                    url_results.add("SwBiXoQLl6s");     // link to world
-                    youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
+                    PlayWord("hello world");
+                    new WebScaper().execute("hello","world");
 
                     Toast.makeText(getApplicationContext(),"Please enter a word!",Toast.LENGTH_SHORT).show();
                 }else{
 
-
                     System.out.println("!!!!!!!!!!!!!!!" +  input_text + "!!!!!!!!!!!!!!!");
                     Toast.makeText(getApplicationContext(),"Translating word!",Toast.LENGTH_SHORT).show();
 
-                    String[] input_words = Prepare_text(input_text);
-                    //PlayWord(input_text)
+                    String[] input_words = Parse.Prepare_text(input_text);
+                    PlayWord(input_text);
                     new WebScaper().execute(input_words);
 
 
@@ -223,7 +234,6 @@ public class MainActivity extends YouTubeBaseActivity {
                     System.out.println("!!!!!!!!!!!!!!!CATCH!!!!!!!!!!!!!!!");
 
                     t.printStackTrace();
-                    return "fail to get urls: inside catch !";
 
                 }
 
@@ -235,21 +245,13 @@ public class MainActivity extends YouTubeBaseActivity {
         protected void onPostExecute(String result) {
             // process results
             System.out.println("!!!!!!!!!!!!!!"+result+"!!!!!!!!!!!!!!!");
-            if(PlayerIsInitialied == false){
-                youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
-            }else{
-                Player.cueVideos(url_results);
-                url_results.clear();
+            youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
+
+
             }
 
-        }
     }
 
-
-    public String[] Prepare_text(String Input ){
-        String parse = Input.toLowerCase();
-        return(parse.split("\\s+"));
-    }
 
     //Input text display
     public void PlayWord(String word){
