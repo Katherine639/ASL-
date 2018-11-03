@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="ASL Translator"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="#000000"/>
+        android:textColor="#ffffff"
+        android:textStyle="bold"/>
 
 </android.support.v7.widget.Toolbar>
