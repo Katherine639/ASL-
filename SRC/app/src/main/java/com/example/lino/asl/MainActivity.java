@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -36,7 +36,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class MainActivity extends YouTubeBaseActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private TextView mVoiceInputTv;
@@ -52,7 +52,7 @@ public class MainActivity extends YouTubeBaseActivity {
     AnimationDrawable wordAnimation;
 
     //Youtube
-    YouTubePlayerView youTubePlayerView;
+    YouTubePlayerFragment youTubePlayerFragment;
     YouTubePlayer.OnInitializedListener onInitializedListener;
     YouTubePlayer.PlaylistEventListener playlistEventListener;
 
@@ -62,11 +62,13 @@ public class MainActivity extends YouTubeBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         /*************  match with xml variables ***************/
         mVoiceInputTv = (TextView) findViewById(R.id.voiceInput);
         mSpeakBtn = (ImageButton) findViewById(R.id.btnSpeak);
-        youTubePlayerView = (YouTubePlayerView)findViewById(R.id.youtube_player_View);
+        youTubePlayerFragment = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_player_View);
         Translate = (Button) findViewById(R.id.button);
         /*************************************************************
          * Youtube player on initialize
@@ -246,7 +248,7 @@ public class MainActivity extends YouTubeBaseActivity {
         protected void onPostExecute(String result) {
             // process results
             System.out.println("!!!!!!!!!!!!!!"+result+"!!!!!!!!!!!!!!!");
-            youTubePlayerView.initialize(PlayerConfig.API_KEY,onInitializedListener);
+            youTubePlayerFragment.initialize(PlayerConfig.API_KEY,onInitializedListener);
 
 
             }
